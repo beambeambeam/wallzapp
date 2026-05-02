@@ -1,14 +1,24 @@
-import { HeadContent, createRootRouteWithContext } from "@tanstack/react-router";
+import {
+  HeadContent,
+  Outlet,
+  createRootRouteWithContext,
+  useRouterState,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Toaster } from "@wallzapp/ui/components/sonner";
 
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "../components/theme-provider";
 
 import "../index.css";
 
 export type RouterAppContext = Record<string, never>;
 
 function RootComponent() {
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
+  const isGameRoute = pathname === "/";
+
   return (
     <>
       <HeadContent />
@@ -18,10 +28,10 @@ function RootComponent() {
         disableTransitionOnChange
         storageKey="vite-ui-theme"
       >
-        <div className="grid grid-rows-[auto_1fr] h-svh"></div>
+        <Outlet />
         <Toaster richColors />
       </ThemeProvider>
-      <TanStackRouterDevtools position="bottom-left" />
+      {isGameRoute ? null : <TanStackRouterDevtools position="bottom-left" />}
     </>
   );
 }

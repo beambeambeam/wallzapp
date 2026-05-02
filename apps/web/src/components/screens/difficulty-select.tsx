@@ -1,0 +1,60 @@
+import { Button } from "@wallzapp/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@wallzapp/ui/components/card";
+import type { JSX } from "react";
+
+import { DIFFICULTY_CONFIG } from "@/constants/difficulty";
+import type { Difficulty } from "@/types/game";
+
+interface DifficultySelectProps {
+  onBack: () => void;
+  onChoose: (difficulty: Difficulty) => void;
+}
+
+const cards: { difficulty: Difficulty; label: string; colorClass: string }[] = [
+  { colorClass: "bg-green-500", difficulty: "easy", label: "Easy" },
+  { colorClass: "bg-yellow-500", difficulty: "medium", label: "Medium" },
+  { colorClass: "bg-red-500", difficulty: "hard", label: "Hard" },
+];
+
+export const DifficultySelect = ({ onBack, onChoose }: DifficultySelectProps): JSX.Element => (
+  <main className="grid min-h-screen place-items-center bg-linear-to-b from-cyan-100 via-white to-orange-100 p-4">
+    <section className="w-full max-w-5xl space-y-6">
+      <h1 className="text-center text-3xl font-bold">Select Difficulty</h1>
+      <div className="grid gap-4 md:grid-cols-3">
+        {cards.map((card) => {
+          const cfg = DIFFICULTY_CONFIG[card.difficulty];
+
+          return (
+            <Card className="border-black/10 bg-white/85" key={card.difficulty}>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between text-2xl">
+                  {card.label}
+                  <span className={`${card.colorClass} rounded px-2 py-1 text-xs text-white`}>
+                    {card.label}
+                  </span>
+                </CardTitle>
+                <CardDescription>
+                  Speed: {cfg.wallSpeed.toFixed(0)} | Reaction: {cfg.reactionSeconds}s
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full" onClick={() => onChoose(card.difficulty)}>
+                  Start {card.label}
+                </Button>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+      <Button onClick={onBack} variant="outline">
+        Back
+      </Button>
+    </section>
+  </main>
+);
