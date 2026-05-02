@@ -8,10 +8,12 @@ pre-commit:
       glob: "*.{js,jsx,ts,tsx}"
       run: bun oxlint --fix {staged_files}
       stage_fixed: true
+      run_on_empty: false
     - name: oxfmt
       glob: "*.{js,jsx,ts,tsx}"
       run: bun oxfmt --write {staged_files}
       stage_fixed: true
+      run_on_empty: false
 
 commit-msg:
   jobs:
