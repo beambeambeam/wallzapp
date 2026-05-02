@@ -84,27 +84,6 @@ const SidePanelWall = ({ side }: { side: "left" | "right" }): JSX.Element => {
   );
 };
 
-const StageTruss = (): JSX.Element => (
-  <group position={[0, STAGE_DIMENSIONS.trussHeight, -12]}>
-    <mesh castShadow receiveShadow position={[0, 0, 0]}>
-      <boxGeometry args={[29, 0.55, 0.55]} />
-      <meshStandardMaterial color={STAGE_COLORS.wallFrame} metalness={0.45} roughness={0.38} />
-    </mesh>
-    {[-13.5, -4.5, 4.5, 13.5].map((x, index) => (
-      <mesh key={`truss-lamp-${x}-${index}`} position={[x, -0.9, 0.42]} rotation={[0.38, 0, 0]}>
-        <cylinderGeometry args={[0.34, 0.46, 0.8, 18]} />
-        <meshStandardMaterial
-          color={STAGE_COLORS.portalFrame}
-          emissive={index % 2 === 0 ? STAGE_COLORS.rimBlue : STAGE_COLORS.borderGlow}
-          emissiveIntensity={1.15}
-          metalness={0.18}
-          roughness={0.24}
-        />
-      </mesh>
-    ))}
-  </group>
-);
-
 const PortalBackdrop = ({ difficulty }: StageEnvironmentProps): JSX.Element => {
   const haloRef = useRef<Mesh>(null);
   const trimRef = useRef<Mesh>(null);
@@ -172,7 +151,6 @@ export const StageEnvironment = ({ difficulty }: StageEnvironmentProps): JSX.Ele
   return (
     <>
       <PortalBackdrop difficulty={difficulty} />
-      <StageTruss />
 
       <mesh receiveShadow position={[0, 0.06, -38]}>
         <boxGeometry args={[STAGE_DIMENSIONS.offstageWidth, 0.12, STAGE_DIMENSIONS.laneLength]} />
