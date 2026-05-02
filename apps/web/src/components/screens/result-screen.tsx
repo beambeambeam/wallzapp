@@ -20,7 +20,7 @@ export const ResultScreen = ({
   onMainMenu,
 }: ResultScreenProps): JSX.Element => (
   <main className="grid min-h-screen place-items-center bg-linear-to-b from-amber-100 via-rose-50 to-sky-100 p-4">
-    <Card className="w-full max-w-3xl border-black/10 bg-white/85">
+    <Card className="w-full max-w-3xl">
       <CardHeader>
         <CardTitle className="text-3xl">Results: {score} / 10</CardTitle>
       </CardHeader>

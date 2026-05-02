@@ -106,7 +106,7 @@ export const Scene = (): JSX.Element => {
 
   return (
     <div className="relative h-screen w-screen">
-      <Canvas camera={{ fov: 47, position: [0, 7.5, 18] }} shadows>
+      <Canvas camera={{ fov: 50, position: [10, 7.5, 20] }} shadows>
         <World onWallResolved={onWallResolved} setWallZ={setWallZ} wallZ={wallZ} />
       </Canvas>
       <HUD
