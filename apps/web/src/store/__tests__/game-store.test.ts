@@ -16,8 +16,8 @@ describe("gameStore", () => {
     expect(state.screen).toBe("countdown");
     expect(state.currentWallIndex).toBe(0);
     expect(state.score).toBe(0);
-    expect(state.leftArm).toBe("out");
-    expect(state.rightArm).toBe("out");
+    expect(state.leftArm).toBe("tucked");
+    expect(state.rightArm).toBe("tucked");
     expect(state.walls).toHaveLength(10);
   });
 

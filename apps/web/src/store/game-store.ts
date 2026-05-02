@@ -29,8 +29,8 @@ interface GameStore {
 const initialState = {
   currentWallIndex: 0,
   difficulty: "easy" as const,
-  leftArm: "out" as const,
-  rightArm: "out" as const,
+  leftArm: "tucked" as const,
+  rightArm: "tucked" as const,
   score: 0,
   screen: "menu" as const,
   showFlash: null,
@@ -51,8 +51,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     set({
       currentWallIndex: nextIndex,
-      leftArm: "out",
-      rightArm: "out",
+      leftArm: "tucked",
+      rightArm: "tucked",
       showFlash: null,
     });
   },
@@ -72,8 +72,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const { wallCount } = DIFFICULTY_CONFIG[difficulty];
     set({
       currentWallIndex: 0,
-      leftArm: "out",
-      rightArm: "out",
+      leftArm: "tucked",
+      rightArm: "tucked",
       score: 0,
       screen: "countdown",
       showFlash: null,
@@ -87,8 +87,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const { wallCount } = DIFFICULTY_CONFIG[difficulty];
     set({
       currentWallIndex: 0,
-      leftArm: "out",
-      rightArm: "out",
+      leftArm: "tucked",
+      rightArm: "tucked",
       score: 0,
       screen: "countdown",
       showFlash: null,
