@@ -13,7 +13,7 @@ interface MainMenuProps {
 }
 
 export const MainMenu = ({ onPlay }: MainMenuProps): JSX.Element => (
-  <main className="grid min-h-screen place-items-center bg-linear-to-b from-sky-200 via-cyan-100 to-amber-100 p-4">
+  <main className="grid min-h-screen place-items-center bg-linear-to-br from-slate-950 via-sky-950 to-amber-950 p-4">
     <Card className="w-full max-w-2xl text-center">
       <CardHeader>
         <CardTitle className="text-3xl font-bold">Hole In The Wall 3D</CardTitle>

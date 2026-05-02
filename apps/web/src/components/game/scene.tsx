@@ -10,6 +10,8 @@ import { Character } from "./character";
 import { Floor } from "./floor";
 import { HUD } from "./hud";
 import { Lighting } from "./lighting";
+import { StageEnvironment } from "./stage-environment";
+import { STAGE_COLORS } from "./stage-theme";
 import { Wall } from "./wall";
 
 const WALL_START_Z = -80;
@@ -70,9 +72,10 @@ const World = ({ onWallResolved, setWallZ, wallZ }: WorldProps): JSX.Element => 
 
   return (
     <>
-      <color args={["#0ea5e9"]} attach="background" />
-      <fog args={["#38bdf8", 30, 140]} attach="fog" />
+      <color args={[STAGE_COLORS.ambientSky]} attach="background" />
+      <fog args={["#102439", 38, 150]} attach="fog" />
       <Lighting />
+      <StageEnvironment difficulty={difficulty} />
       <Floor />
       <Character leftArm={leftArm} rightArm={rightArm} />
       <Wall config={currentWall} difficulty={difficulty} zPosition={wallZ} />
@@ -106,7 +109,16 @@ export const Scene = (): JSX.Element => {
 
   return (
     <div className="relative h-screen w-screen">
-      <Canvas camera={{ fov: 50, position: [10, 7.5, 20] }} shadows>
+      <Canvas
+        camera={{ far: 220, fov: 43, position: [16, 9.5, 23] }}
+        dpr={[1, 1.75]}
+        gl={{ antialias: true, powerPreference: "high-performance" }}
+        onCreated={({ camera, gl }) => {
+          camera.lookAt(0, 4.2, -24);
+          gl.setClearColor(STAGE_COLORS.ambientSky);
+        }}
+        shadows
+      >
         <World onWallResolved={onWallResolved} setWallZ={setWallZ} wallZ={wallZ} />
       </Canvas>
       <HUD
