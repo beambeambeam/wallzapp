@@ -14,7 +14,7 @@ interface MainMenuProps {
 
 export const MainMenu = ({ onPlay }: MainMenuProps): JSX.Element => (
   <main className="grid min-h-screen place-items-center bg-linear-to-b from-sky-200 via-cyan-100 to-amber-100 p-4">
-    <Card className="w-full max-w-2xl border-black/15 bg-white/80 shadow-xl backdrop-blur">
+    <Card className="w-full max-w-2xl text-center">
       <CardHeader>
         <CardTitle className="text-3xl font-bold">Hole In The Wall 3D</CardTitle>
         <CardDescription>
@@ -23,7 +23,7 @@ export const MainMenu = ({ onPlay }: MainMenuProps): JSX.Element => (
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Button className="w-full" onClick={onPlay} size="lg">
+        <Button className="w-fit" onClick={onPlay} size="lg">
           Play
         </Button>
       </CardContent>

@@ -1,4 +1,5 @@
 import { Button } from "@wallzapp/ui/components/button";
+import { Badge } from "@wallzapp/ui/components/badge";
 import {
   Card,
   CardContent,
@@ -16,10 +17,10 @@ interface DifficultySelectProps {
   onChoose: (difficulty: Difficulty) => void;
 }
 
-const cards: { difficulty: Difficulty; label: string; colorClass: string }[] = [
-  { colorClass: "bg-green-500", difficulty: "easy", label: "Easy" },
-  { colorClass: "bg-yellow-500", difficulty: "medium", label: "Medium" },
-  { colorClass: "bg-red-500", difficulty: "hard", label: "Hard" },
+const cards: { difficulty: Difficulty; label: string }[] = [
+  { difficulty: "easy", label: "Easy" },
+  { difficulty: "medium", label: "Medium" },
+  { difficulty: "hard", label: "Hard" },
 ];
 
 export const DifficultySelect = ({ onBack, onChoose }: DifficultySelectProps): JSX.Element => (
@@ -31,13 +32,11 @@ export const DifficultySelect = ({ onBack, onChoose }: DifficultySelectProps): J
           const cfg = DIFFICULTY_CONFIG[card.difficulty];
 
           return (
-            <Card className="border-black/10 bg-white/85" key={card.difficulty}>
+            <Card key={card.difficulty}>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between text-2xl">
                   {card.label}
-                  <span className={`${card.colorClass} rounded px-2 py-1 text-xs text-white`}>
-                    {card.label}
-                  </span>
+                  <Badge variant={card.difficulty}>{card.label}</Badge>
                 </CardTitle>
                 <CardDescription>
                   Speed: {cfg.wallSpeed.toFixed(0)} | Reaction: {cfg.reactionSeconds}s
