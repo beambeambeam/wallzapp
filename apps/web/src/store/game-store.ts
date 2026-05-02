@@ -17,8 +17,8 @@ interface GameStore {
   goTo: (screen: ScreenState) => void;
   setDifficulty: (difficulty: Difficulty) => void;
   startRound: () => void;
-  toggleLeftArm: () => void;
-  toggleRightArm: () => void;
+  setLeftArm: (state: ArmState) => void;
+  setRightArm: (state: ArmState) => void;
   resolveCurrentWall: (result: WallResult) => void;
   advanceWall: () => void;
   resetToMenu: () => void;
@@ -29,8 +29,8 @@ interface GameStore {
 const initialState = {
   currentWallIndex: 0,
   difficulty: "easy" as const,
-  leftArm: "tucked" as const,
-  rightArm: "tucked" as const,
+  leftArm: "out" as const,
+  rightArm: "out" as const,
   score: 0,
   screen: "menu" as const,
   showFlash: null,
@@ -51,8 +51,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     set({
       currentWallIndex: nextIndex,
-      leftArm: "tucked",
-      rightArm: "tucked",
+      leftArm: "out",
+      rightArm: "out",
       showFlash: null,
     });
   },
@@ -72,8 +72,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const { wallCount } = DIFFICULTY_CONFIG[difficulty];
     set({
       currentWallIndex: 0,
-      leftArm: "tucked",
-      rightArm: "tucked",
+      leftArm: "out",
+      rightArm: "out",
       score: 0,
       screen: "countdown",
       showFlash: null,
@@ -82,26 +82,20 @@ export const useGameStore = create<GameStore>((set, get) => ({
     });
   },
   setDifficulty: (difficulty) => set({ difficulty }),
+  setLeftArm: (leftArm) => set({ leftArm }),
+  setRightArm: (rightArm) => set({ rightArm }),
   startRound: () => {
     const { difficulty } = get();
     const { wallCount } = DIFFICULTY_CONFIG[difficulty];
     set({
       currentWallIndex: 0,
-      leftArm: "tucked",
-      rightArm: "tucked",
+      leftArm: "out",
+      rightArm: "out",
       score: 0,
       screen: "countdown",
       showFlash: null,
       wallResults: [],
       walls: generateWalls(wallCount),
     });
-  },
-  toggleLeftArm: () => {
-    const { leftArm } = get();
-    set({ leftArm: leftArm === "out" ? "tucked" : "out" });
-  },
-  toggleRightArm: () => {
-    const { rightArm } = get();
-    set({ rightArm: rightArm === "out" ? "tucked" : "out" });
   },
 }));
