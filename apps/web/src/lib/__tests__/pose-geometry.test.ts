@@ -28,6 +28,8 @@ const intersectsRect = (segment: WallSegment, hole: RectBounds): boolean => {
   );
 };
 
+const rectCenterY = (rect: RectBounds): number => (rect.minY + rect.maxY) / 2;
+
 describe("pose geometry", () => {
   const poses = [
     { leftArm: "out", rightArm: "out" },
@@ -36,12 +38,19 @@ describe("pose geometry", () => {
     { leftArm: "tucked", rightArm: "tucked" },
   ] as const;
 
-  test("out arm extends corresponding lateral silhouette compared to tucked", () => {
+  test("tucked lowers arm center y for both sides", () => {
     const bothOut = getPoseSilhouetteBounds({ leftArm: "out", rightArm: "out" });
     const bothTucked = getPoseSilhouetteBounds({ leftArm: "tucked", rightArm: "tucked" });
 
-    expect(bothOut.leftArm.minX).toBeLessThan(bothTucked.leftArm.minX);
-    expect(bothOut.rightArm.maxX).toBeGreaterThan(bothTucked.rightArm.maxX);
+    expect(rectCenterY(bothTucked.leftArm)).toBeLessThan(rectCenterY(bothOut.leftArm));
+    expect(rectCenterY(bothTucked.rightArm)).toBeLessThan(rectCenterY(bothOut.rightArm));
+  });
+
+  test("tucked arms stay on their expected sides", () => {
+    const tucked = getPoseSilhouetteBounds({ leftArm: "tucked", rightArm: "tucked" });
+
+    expect(tucked.leftArm.maxX).toBeLessThanOrEqual(0.25);
+    expect(tucked.rightArm.minX).toBeGreaterThanOrEqual(-0.25);
   });
 
   test("body silhouette always contains body core vertical range", () => {

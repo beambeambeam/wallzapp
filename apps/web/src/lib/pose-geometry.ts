@@ -58,6 +58,7 @@ export const CHARACTER_GEOMETRY: CharacterGeometry = {
     pivotXOffset: 1,
     pivotY: 3.9,
     thickness: 0.28,
+    // Straight-down tuck endpoint for side arms.
     tuckedRotation: Math.PI / 2.5,
   },
   head: {
@@ -135,7 +136,7 @@ const getRotatedArmBounds = (side: "left" | "right", state: ArmState): RectBound
     [localCenterX + halfWidth, localCenterY + halfHeight],
   ];
 
-  const rotationSign = side === "left" ? -1 : 1;
+  const rotationSign = side === "left" ? 1 : -1;
   const angle = state === "out" ? 0 : rotationSign * CHARACTER_GEOMETRY.arm.tuckedRotation;
   const cos = Math.cos(angle);
   const sin = Math.sin(angle);

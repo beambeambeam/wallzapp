@@ -19,7 +19,7 @@ export const MainMenu = ({ onPlay }: MainMenuProps): JSX.Element => (
         <CardTitle className="text-3xl font-bold">Hole In The Wall 3D</CardTitle>
         <CardDescription>
           Match the wall pose before it reaches you. Press <strong>A</strong> to toggle left arm and
-          <strong> D</strong> to toggle right arm.
+          <strong> D</strong> to toggle right arm between out and down-tuck.
         </CardDescription>
       </CardHeader>
       <CardContent>

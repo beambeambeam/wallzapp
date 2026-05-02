@@ -9,18 +9,21 @@ interface CharacterProps {
   rightArm: ArmState;
 }
 
-const armRotation = (state: ArmState): number =>
+const getLeftArmRotation = (state: ArmState): number =>
+  state === "out" ? 0 : CHARACTER_GEOMETRY.arm.tuckedRotation;
+
+const getRightArmRotation = (state: ArmState): number =>
   state === "out" ? 0 : -CHARACTER_GEOMETRY.arm.tuckedRotation;
 
 export const Character = ({ leftArm, rightArm }: CharacterProps): JSX.Element => {
   const leftSpring = useSpring({
     config: { friction: 18, tension: 170 },
-    rotationZ: armRotation(leftArm),
+    rotationZ: getLeftArmRotation(leftArm),
   });
 
   const rightSpring = useSpring({
     config: { friction: 18, tension: 170 },
-    rotationZ: -armRotation(rightArm),
+    rotationZ: getRightArmRotation(rightArm),
   });
 
   return (
