@@ -124,3 +124,7 @@ Oxlint + Oxfmt's linter will catch most issues automatically. Focus your attenti
 ---
 
 Most formatting and common issues are automatically fixed by Oxlint + Oxfmt. Run `bun x ultracite fix` before committing to ensure compliance.
+
+# Shadcn
+
+all shadcn component import same method as shadcn go to packages/ui and run in it to put component there
