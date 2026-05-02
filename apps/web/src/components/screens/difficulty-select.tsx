@@ -24,7 +24,7 @@ const cards: { difficulty: Difficulty; label: string }[] = [
 ];
 
 export const DifficultySelect = ({ onBack, onChoose }: DifficultySelectProps): JSX.Element => (
-  <main className="grid min-h-screen place-items-center bg-linear-to-b from-cyan-100 via-white to-orange-100 p-4">
+  <main className="grid min-h-screen place-items-center bg-linear-to-br from-slate-950 via-cyan-950 to-amber-950 p-4">
     <section className="w-full max-w-5xl space-y-6">
       <h1 className="text-center text-3xl font-bold">Select Difficulty</h1>
       <div className="grid gap-4 md:grid-cols-3">
