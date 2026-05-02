@@ -4,4 +4,8 @@ import react from "ultracite/oxlint/react";
 
 export default defineConfig({
   extends: [core, react],
+  ignorePatterns: ["apps/web/src/routeTree.gen.ts"],
+  rules: {
+    "func-style": "off",
+  },
 });

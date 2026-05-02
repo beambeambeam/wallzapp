@@ -4,12 +4,9 @@ const webBuildDir = "../web/dist";
 
 export default {
   app: {
-    name: "wallzapp",
     identifier: "dev.bettertstack.wallzapp.desktop",
+    name: "wallzapp",
     version: "0.0.1",
-  },
-  runtime: {
-    exitOnLastWindowClosed: true,
   },
   build: {
     bun: {
@@ -18,18 +15,21 @@ export default {
     copy: {
       [webBuildDir]: "views/mainview",
     },
-    watchIgnore: [`${webBuildDir}/**`],
-    mac: {
-      bundleCEF: true,
-      defaultRenderer: "cef",
-    },
     linux: {
       bundleCEF: true,
       defaultRenderer: "cef",
     },
+    mac: {
+      bundleCEF: true,
+      defaultRenderer: "cef",
+    },
+    watchIgnore: [`${webBuildDir}/**`],
     win: {
       bundleCEF: true,
       defaultRenderer: "cef",
     },
+  },
+  runtime: {
+    exitOnLastWindowClosed: true,
   },
 } satisfies ElectrobunConfig;

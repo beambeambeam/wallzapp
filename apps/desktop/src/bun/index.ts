@@ -21,15 +21,16 @@ async function getMainViewUrl(): Promise<string> {
 
 const url = await getMainViewUrl();
 
+// oxlint-disable-next-line no-new
 new BrowserWindow({
-  title: "wallzapp",
-  url,
   frame: {
-    width: 1280,
     height: 820,
+    width: 1280,
     x: 120,
     y: 120,
   },
+  title: "wallzapp",
+  url,
 });
 
 console.log("Electrobun desktop shell started.");

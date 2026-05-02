@@ -7,28 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 import "../index.css";
 
-export interface RouterAppContext {}
-
-export const Route = createRootRouteWithContext<RouterAppContext>()({
-  component: RootComponent,
-  head: () => ({
-    meta: [
-      {
-        title: "wallzapp",
-      },
-      {
-        name: "description",
-        content: "wallzapp is a web application",
-      },
-    ],
-    links: [
-      {
-        rel: "icon",
-        href: "/favicon.ico",
-      },
-    ],
-  }),
-});
+export type RouterAppContext = Record<string, never>;
 
 function RootComponent() {
   return (
@@ -50,3 +29,24 @@ function RootComponent() {
     </>
   );
 }
+
+export const Route = createRootRouteWithContext<RouterAppContext>()({
+  component: RootComponent,
+  head: () => ({
+    links: [
+      {
+        href: "/favicon.ico",
+        rel: "icon",
+      },
+    ],
+    meta: [
+      {
+        title: "wallzapp",
+      },
+      {
+        content: "wallzapp is a web application",
+        name: "description",
+      },
+    ],
+  }),
+});
