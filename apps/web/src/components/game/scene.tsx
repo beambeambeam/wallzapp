@@ -11,6 +11,7 @@ import { Character } from "./character";
 import { Floor } from "./floor";
 import { HUD } from "./hud";
 import { Lighting } from "./lighting";
+import { PostProcessing } from "./post-processing";
 import { StageEnvironment } from "./stage-environment";
 import { STAGE_COLORS } from "./stage-theme";
 import { Wall } from "./wall";
@@ -122,6 +123,7 @@ export const Scene = (): JSX.Element => {
         shadows
       >
         <World onWallResolved={onWallResolved} setWallZ={setWallZ} wallZ={wallZ} />
+        <PostProcessing />
       </Canvas>
       <HUD
         currentWall={currentWallIndex + 1}
