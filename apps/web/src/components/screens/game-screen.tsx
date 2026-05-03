@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import type { JSX } from "react";
 
 import { useKeyControls } from "@/hooks/use-key-controls";
-import { startMusic, stopMusic } from "@/lib/sound";
 import { useGameStore } from "@/store/game-store";
 
 import { Scene } from "../game/scene";
@@ -13,16 +12,6 @@ export const GameScreen = (): JSX.Element => {
   const [countdown, setCountdown] = useState<number>(3);
 
   useKeyControls();
-
-  useEffect(() => {
-    if (screen === "playing") {
-      startMusic();
-    }
-
-    return () => {
-      stopMusic();
-    };
-  }, [screen]);
 
   useEffect(() => {
     if (screen !== "countdown") {
