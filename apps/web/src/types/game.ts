@@ -1,5 +1,7 @@
 export type Difficulty = "easy" | "medium" | "hard";
 
+export type GameMode = "classic" | "endless";
+
 export type ArmState = "out" | "tucked";
 
 export interface WallConfig {

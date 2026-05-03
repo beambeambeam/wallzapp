@@ -2,12 +2,13 @@ import { Button } from "@wallzapp/ui/components/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@wallzapp/ui/components/card";
 import type { JSX } from "react";
 
-import type { WallResult } from "@/types/game";
+import type { GameMode, WallResult } from "@/types/game";
 
 interface ResultScreenProps {
   score: number;
   totalWalls: number;
   wallResults: WallResult[];
+  gameMode: GameMode;
   onRetry: () => void;
   onMainMenu: () => void;
 }
@@ -16,13 +17,18 @@ export const ResultScreen = ({
   score,
   totalWalls,
   wallResults,
+  gameMode,
   onRetry,
   onMainMenu,
 }: ResultScreenProps): JSX.Element => (
   <main className="grid min-h-screen place-items-center bg-linear-to-b from-amber-100 via-rose-50 to-sky-100 p-4">
     <Card className="w-full max-w-3xl">
       <CardHeader>
-        <CardTitle className="text-3xl">Results: {score} / 10</CardTitle>
+        <CardTitle className="text-3xl">
+          {gameMode === "endless"
+            ? `Endless — Survived ${totalWalls - 1} wall${totalWalls - 1 !== 1 ? "s" : ""}`
+            : `Results: ${score} / 10`}
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
@@ -39,7 +45,9 @@ export const ResultScreen = ({
         </div>
 
         <p className="text-sm text-muted-foreground">
-          Final Score: {score} out of {totalWalls}
+          {gameMode === "endless"
+            ? `You passed ${score} wall${score !== 1 ? "s" : ""} before hitting a wall.`
+            : `Final Score: ${score} out of ${totalWalls}`}
         </p>
 
         <div className="flex gap-3">

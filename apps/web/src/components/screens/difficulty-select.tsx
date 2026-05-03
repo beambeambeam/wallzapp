@@ -9,12 +9,13 @@ import {
 } from "@wallzapp/ui/components/card";
 import type { JSX } from "react";
 
-import { DIFFICULTY_CONFIG } from "@/constants/difficulty";
+import { DIFFICULTY_CONFIG, ENDLESS_INITIAL_SPEED } from "@/constants/difficulty";
 import type { Difficulty } from "@/types/game";
 
 interface DifficultySelectProps {
   onBack: () => void;
   onChoose: (difficulty: Difficulty) => void;
+  onEndless: () => void;
 }
 
 const cards: { difficulty: Difficulty; label: string }[] = [
@@ -23,7 +24,7 @@ const cards: { difficulty: Difficulty; label: string }[] = [
   { difficulty: "hard", label: "Hard" },
 ];
 
-export const DifficultySelect = ({ onBack, onChoose }: DifficultySelectProps): JSX.Element => (
+export const DifficultySelect = ({ onBack, onChoose, onEndless }: DifficultySelectProps): JSX.Element => (
   <main className="grid min-h-screen place-items-center bg-linear-to-br from-slate-950 via-cyan-950 to-amber-950 p-4">
     <section className="w-full max-w-5xl space-y-6">
       <h1 className="text-center text-3xl font-bold">Select Difficulty</h1>
@@ -51,6 +52,25 @@ export const DifficultySelect = ({ onBack, onChoose }: DifficultySelectProps): J
           );
         })}
       </div>
+
+      <Card className="border-purple-500/40 bg-gradient-to-br from-purple-950/60 to-slate-950/80">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between text-2xl">
+            Endless
+            <Badge variant="outline" className="border-purple-400 text-purple-300">Endless</Badge>
+          </CardTitle>
+          <CardDescription>
+            Speed increases every wall. How long can you survive?
+            Starting speed: {ENDLESS_INITIAL_SPEED}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button className="w-full bg-purple-600 hover:bg-purple-700" onClick={onEndless}>
+            Start Endless
+          </Button>
+        </CardContent>
+      </Card>
+
       <Button onClick={onBack} variant="outline">
         Back
       </Button>

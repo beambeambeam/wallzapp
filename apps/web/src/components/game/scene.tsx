@@ -28,6 +28,9 @@ interface WorldProps {
 
 const World = ({ onWallResolved, setWallZ, wallZ }: WorldProps): JSX.Element => {
   const difficulty = useGameStore((state) => state.difficulty);
+  const gameMode = useGameStore((state) => state.gameMode);
+  const endlessWallSpeed = useGameStore((state) => state.endlessWallSpeed);
+  const endlessLeniencyMs = useGameStore((state) => state.endlessLeniencyMs);
   const walls = useGameStore((state) => state.walls);
   const currentWallIndex = useGameStore((state) => state.currentWallIndex);
   const leftArm = useGameStore((state) => state.leftArm);
@@ -35,6 +38,8 @@ const World = ({ onWallResolved, setWallZ, wallZ }: WorldProps): JSX.Element => 
   const resolveCurrentWall = useGameStore((state) => state.resolveCurrentWall);
 
   const config = DIFFICULTY_CONFIG[difficulty];
+  const activeSpeed = gameMode === "endless" ? endlessWallSpeed : config.wallSpeed;
+  const activeLeniency = gameMode === "endless" ? endlessLeniencyMs : config.leniencyMs;
   const [didJudge, setDidJudge] = useState<boolean>(false);
 
   const currentWall = walls[currentWallIndex];
@@ -49,14 +54,14 @@ const World = ({ onWallResolved, setWallZ, wallZ }: WorldProps): JSX.Element => 
       return;
     }
 
-    const nextZ = wallZ + config.wallSpeed * delta;
+    const nextZ = wallZ + activeSpeed * delta;
     setWallZ(nextZ);
 
     if (nextZ >= JUDGMENT_Z) {
-      const offsetMs = ((nextZ - JUDGMENT_Z) / config.wallSpeed) * 1000;
+      const offsetMs = ((nextZ - JUDGMENT_Z) / activeSpeed) * 1000;
       const isPass = judgeWall({
         leftArm,
-        leniencyMs: config.leniencyMs,
+        leniencyMs: activeLeniency,
         requiredWall: currentWall,
         rightArm,
         timingOffsetMs: offsetMs,
@@ -90,12 +95,16 @@ export const Scene = (): JSX.Element => {
   const advanceWall = useGameStore((state) => state.advanceWall);
   const clearFlash = useGameStore((state) => state.clearFlash);
   const difficulty = useGameStore((state) => state.difficulty);
+  const gameMode = useGameStore((state) => state.gameMode);
+  const endlessWallSpeed = useGameStore((state) => state.endlessWallSpeed);
+  const goTo = useGameStore((state) => state.goTo);
   const walls = useGameStore((state) => state.walls);
   const currentWallIndex = useGameStore((state) => state.currentWallIndex);
   const leftArm = useGameStore((state) => state.leftArm);
   const rightArm = useGameStore((state) => state.rightArm);
   const showFlash = useGameStore((state) => state.showFlash);
   const score = useGameStore((state) => state.score);
+  const wallResults = useGameStore((state) => state.wallResults);
 
   const config = useMemo(() => DIFFICULTY_CONFIG[difficulty], [difficulty]);
   const [wallZ, setWallZ] = useState<number>(WALL_START_Z);
@@ -104,10 +113,18 @@ export const Scene = (): JSX.Element => {
   const progress = (wallZ - WALL_START_Z) / travelDistance;
 
   const onWallResolved = (): void => {
+    const delay = gameMode === "endless" ? 1000 : config.interWallDelayMs;
     window.setTimeout(() => {
+      const latestResults = useGameStore.getState().wallResults;
+      const lastResult = latestResults[latestResults.length - 1];
+      if (gameMode === "endless" && lastResult === "fail") {
+        clearFlash();
+        goTo("result");
+        return;
+      }
       clearFlash();
       advanceWall();
-    }, config.interWallDelayMs);
+    }, delay);
   };
 
   return (
@@ -127,12 +144,15 @@ export const Scene = (): JSX.Element => {
       </Canvas>
       <HUD
         currentWall={currentWallIndex + 1}
+        endlessSpeed={gameMode === "endless" ? endlessWallSpeed : undefined}
         flash={showFlash}
+        gameMode={gameMode}
         leftArm={leftArm}
         progress={progress}
         rightArm={rightArm}
         score={score}
         totalWalls={walls.length}
+        wallResults={wallResults}
       />
     </div>
   );
