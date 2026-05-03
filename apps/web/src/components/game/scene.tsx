@@ -149,12 +149,14 @@ export const Scene = (): JSX.Element => {
   const onWallResolved = (): void => {
     const delay = gameMode === "endless" ? 1000 : config.interWallDelayMs;
     window.setTimeout(() => {
-      const latestResults = useGameStore.getState().wallResults;
+      const { gameMode: currentGameMode, wallResults: latestResults } = useGameStore.getState();
       const lastResult = latestResults[latestResults.length - 1];
-      if (gameMode === "endless" && lastResult === "fail") {
+      if (currentGameMode === "endless" && lastResult === "fail") {
         soundService.playLose();
-        clearFlash();
-        goTo("result");
+        window.setTimeout(() => {
+          clearFlash();
+          goTo("result");
+        }, 1500);
         return;
       }
       clearFlash();
