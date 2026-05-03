@@ -235,6 +235,34 @@ describe("GameApp flow smoke", () => {
     expect(useGameStore.getState().rightArm).toBe("out");
   });
 
+  test("keeps arms tucked across wall advances while the control is still held", () => {
+    render(<KeyControlsHarness />);
+
+    act(() => {
+      useGameStore.getState().startRound();
+      useGameStore.getState().goTo("playing");
+    });
+
+    advanceAnimationFrame(16);
+    fireEvent.keyDown(window, { key: "a" });
+
+    expect(useGameStore.getState().leftArm).toBe("tucked");
+    expect(useGameStore.getState().rightArm).toBe("out");
+
+    act(() => {
+      useGameStore.getState().advanceWall();
+    });
+
+    expect(useGameStore.getState().currentWallIndex).toBe(1);
+    expect(useGameStore.getState().leftArm).toBe("tucked");
+    expect(useGameStore.getState().rightArm).toBe("out");
+
+    fireEvent.keyUp(window, { key: "a" });
+
+    expect(useGameStore.getState().leftArm).toBe("out");
+    expect(useGameStore.getState().rightArm).toBe("out");
+  });
+
   test("requires holding both controls before countdown starts and resets on early release", () => {
     render(<GameApp />);
 
