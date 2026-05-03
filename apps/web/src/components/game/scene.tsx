@@ -4,12 +4,14 @@ import type { JSX } from "react";
 
 import { DIFFICULTY_CONFIG } from "@/constants/difficulty";
 import { judgeWall } from "@/lib/judgment";
+import { soundService } from "@/lib/sound";
 import { useGameStore } from "@/store/game-store";
 
 import { Character } from "./character";
 import { Floor } from "./floor";
 import { HUD } from "./hud";
 import { Lighting } from "./lighting";
+import { PostProcessing } from "./post-processing";
 import { StageEnvironment } from "./stage-environment";
 import { STAGE_COLORS } from "./stage-theme";
 import { Wall } from "./wall";
@@ -60,6 +62,7 @@ const World = ({ onWallResolved, setWallZ, wallZ }: WorldProps): JSX.Element => 
         timingOffsetMs: offsetMs,
       });
 
+      soundService.playSound(isPass ? "pass" : "hit");
       resolveCurrentWall(isPass ? "pass" : "fail");
       setDidJudge(true);
       onWallResolved();
@@ -120,6 +123,7 @@ export const Scene = (): JSX.Element => {
         shadows
       >
         <World onWallResolved={onWallResolved} setWallZ={setWallZ} wallZ={wallZ} />
+        <PostProcessing />
       </Canvas>
       <HUD
         currentWall={currentWallIndex + 1}
