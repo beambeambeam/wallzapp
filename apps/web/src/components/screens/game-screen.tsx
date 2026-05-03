@@ -3,6 +3,7 @@ import type { JSX } from "react";
 
 import { useControlPressState } from "@/hooks/use-control-press-state";
 import { useKeyControls } from "@/hooks/use-key-controls";
+import { soundService } from "@/lib/sound";
 import { useGameStore } from "@/store/game-store";
 
 import { Scene } from "../game/scene";
@@ -28,6 +29,16 @@ export const GameScreen = (): JSX.Element => {
     leftPressedRef.current = leftPressed;
     rightPressedRef.current = rightPressed;
   }, [leftPressed, rightPressed]);
+
+  useEffect(() => {
+    if (screen === "playing") {
+      soundService.startMusic();
+    }
+
+    return () => {
+      soundService.stopMusic();
+    };
+  }, [screen]);
 
   useEffect(() => {
     if (screen !== "countdown") {
