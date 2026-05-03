@@ -10,6 +10,9 @@
     "build": "turbo -F web build && electrobun build",
     "build:stable": "turbo -F web build && electrobun build --env=stable",
     "build:canary": "turbo -F web build && electrobun build --env=canary",
+    "build:win": "turbo -F web build && electrobun build --env=stable",
+    "extract:win:exe": "powershell -ExecutionPolicy Bypass -File ./scripts/extract-windows-exe.ps1",
+    "dist:win:exe": "bun run build:win && bun run extract:win:exe",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
