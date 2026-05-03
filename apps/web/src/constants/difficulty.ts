@@ -18,10 +18,10 @@ export interface EndlessTier {
 }
 
 export const ENDLESS_TIERS: EndlessTier[] = [
-  { leniencyDecrement: 4,  speedIncrement: 2,  wallCount: 3  }, // walls 1–3:   slow ramp
-  { leniencyDecrement: 8,  speedIncrement: 5,  wallCount: 3  }, // walls 4–6:   medium ramp
-  { leniencyDecrement: 12, speedIncrement: 8,  wallCount: 3  }, // walls 7–9:   fast ramp
-  { leniencyDecrement: 15, speedIncrement: 12, wallCount: Infinity }, // wall 10+: brutal
+  { leniencyDecrement: 4, speedIncrement: 5, wallCount: 3 }, // walls 1–3:   slow ramp
+  { leniencyDecrement: 8, speedIncrement: 8, wallCount: 5 }, // walls 4–6:   medium ramp
+  { leniencyDecrement: 12, speedIncrement: 12, wallCount: 5 }, // walls 7–9:   fast ramp
+  { leniencyDecrement: 15, speedIncrement: 5, wallCount: Infinity }, // wall 10+: brutal
 ];
 
 export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultyConfig> = {

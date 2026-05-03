@@ -1,8 +1,8 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { JSX } from "react";
 
-import { DIFFICULTY_CONFIG } from "@/constants/difficulty";
+import { DIFFICULTY_CONFIG, ENDLESS_TIERS } from "@/constants/difficulty";
 import { judgeWall } from "@/lib/judgment";
 import { soundService } from "@/lib/sound";
 import { useGameStore } from "@/store/game-store";
@@ -20,13 +20,24 @@ const WALL_START_Z = -80;
 const JUDGMENT_Z = 0;
 const WALL_DESPAWN_Z = 20;
 
+/** Returns which tier index (0-based) a given wall number (1-based) falls into. */
+const getTierIndex = (wallNumber: number): number => {
+  let wallsSeen = 0;
+  for (const [index, tier] of ENDLESS_TIERS.entries()) {
+    wallsSeen += tier.wallCount;
+    if (wallNumber <= wallsSeen) return index;
+  }
+  return ENDLESS_TIERS.length - 1;
+};
+
 interface WorldProps {
   onWallResolved: () => void;
   setWallZ: (value: number) => void;
+  tierIndex: number;
   wallZ: number;
 }
 
-const World = ({ onWallResolved, setWallZ, wallZ }: WorldProps): JSX.Element => {
+const World = ({ onWallResolved, setWallZ, tierIndex, wallZ }: WorldProps): JSX.Element => {
   const difficulty = useGameStore((state) => state.difficulty);
   const gameMode = useGameStore((state) => state.gameMode);
   const endlessWallSpeed = useGameStore((state) => state.endlessWallSpeed);
@@ -43,6 +54,16 @@ const World = ({ onWallResolved, setWallZ, wallZ }: WorldProps): JSX.Element => 
   const [didJudge, setDidJudge] = useState<boolean>(false);
 
   const currentWall = walls[currentWallIndex];
+
+  // Fog color shifts red at high tiers in endless
+  const fogColor = useMemo(() => {
+    if (gameMode !== "endless") return "#102439";
+    const fogColors = ["#102439", "#12283a", "#2a1510", "#3a0a0a"];
+    return fogColors[Math.min(tierIndex, fogColors.length - 1)];
+  }, [gameMode, tierIndex]);
+
+  // Fog near distance tightens at high tiers for tunnel-vision feel
+  const fogNear = gameMode === "endless" ? Math.max(38 - tierIndex * 6, 14) : 38;
 
   useEffect(() => {
     setWallZ(WALL_START_Z);
@@ -81,9 +102,9 @@ const World = ({ onWallResolved, setWallZ, wallZ }: WorldProps): JSX.Element => 
   return (
     <>
       <color args={[STAGE_COLORS.ambientSky]} attach="background" />
-      <fog args={["#102439", 38, 150]} attach="fog" />
+      <fog args={[fogColor, fogNear, 150]} attach="fog" />
       <Lighting />
-      <StageEnvironment difficulty={difficulty} />
+      <StageEnvironment difficulty={difficulty} tierIndex={gameMode === "endless" ? tierIndex : 0} />
       <Floor />
       <Character leftArm={leftArm} rightArm={rightArm} />
       <Wall config={currentWall} difficulty={difficulty} zPosition={wallZ} />
@@ -112,12 +133,26 @@ export const Scene = (): JSX.Element => {
   const travelDistance = WALL_DESPAWN_Z - WALL_START_Z;
   const progress = (wallZ - WALL_START_Z) / travelDistance;
 
+  // tierIndex is 0 in classic mode, computed from wall number in endless
+  const tierIndex = gameMode === "endless" ? getTierIndex(currentWallIndex + 1) : 0;
+
+  // Play tier step-up sound when tierIndex increases
+  const prevTierRef = useRef(0);
+  useEffect(() => {
+    if (gameMode !== "endless") return;
+    if (tierIndex > 0 && tierIndex !== prevTierRef.current) {
+      soundService.playTier(Math.min(tierIndex, 3) as 1 | 2 | 3);
+    }
+    prevTierRef.current = tierIndex;
+  }, [tierIndex, gameMode]);
+
   const onWallResolved = (): void => {
     const delay = gameMode === "endless" ? 1000 : config.interWallDelayMs;
     window.setTimeout(() => {
       const latestResults = useGameStore.getState().wallResults;
       const lastResult = latestResults[latestResults.length - 1];
       if (gameMode === "endless" && lastResult === "fail") {
+        soundService.playLose();
         clearFlash();
         goTo("result");
         return;
@@ -139,8 +174,13 @@ export const Scene = (): JSX.Element => {
         }}
         shadows
       >
-        <World onWallResolved={onWallResolved} setWallZ={setWallZ} wallZ={wallZ} />
-        <PostProcessing />
+        <World
+          onWallResolved={onWallResolved}
+          setWallZ={setWallZ}
+          tierIndex={tierIndex}
+          wallZ={wallZ}
+        />
+        <PostProcessing tierIndex={tierIndex} />
       </Canvas>
       <HUD
         currentWall={currentWallIndex + 1}
@@ -151,6 +191,7 @@ export const Scene = (): JSX.Element => {
         progress={progress}
         rightArm={rightArm}
         score={score}
+        tierIndex={tierIndex}
         totalWalls={walls.length}
         wallResults={wallResults}
       />
