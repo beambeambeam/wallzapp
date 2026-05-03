@@ -49,7 +49,6 @@ export const GameScreen = (): JSX.Element => {
     setHoldProgressMs(0);
     holdProgressRef.current = 0;
     setCountdown(3);
-    soundService.playCountdown(3);
   }, [screen]);
 
   useEffect(() => {
@@ -100,12 +99,12 @@ export const GameScreen = (): JSX.Element => {
       return;
     }
 
+    soundService.playCountdown(3);
+
     const intervalId = window.setInterval(() => {
       setCountdown((value) => {
         if (value <= 1) {
           window.clearInterval(intervalId);
-          soundService.playGo();
-          goTo("playing");
           return 0;
         }
 
@@ -118,10 +117,11 @@ export const GameScreen = (): JSX.Element => {
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [countdownPhase, goTo, screen]);
+  }, [countdownPhase, screen]);
 
   useEffect(() => {
     if (screen === "countdown" && countdownPhase === "countdown" && countdown === 0) {
+      soundService.playGo();
       goTo("playing");
     }
   }, [countdown, countdownPhase, goTo, screen]);
