@@ -51,8 +51,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     set({
       currentWallIndex: nextIndex,
-      leftArm: "out",
-      rightArm: "out",
       showFlash: null,
     });
   },
