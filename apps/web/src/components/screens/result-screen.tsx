@@ -1,5 +1,3 @@
-import { Button } from "@wallzapp/ui/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@wallzapp/ui/components/card";
 import type { JSX } from "react";
 
 import type { WallResult } from "@/types/game";
@@ -19,36 +17,77 @@ export const ResultScreen = ({
   onRetry,
   onMainMenu,
 }: ResultScreenProps): JSX.Element => (
-  <main className="grid min-h-screen place-items-center bg-linear-to-b from-amber-100 via-rose-50 to-sky-100 p-4">
-    <Card className="w-full max-w-3xl">
-      <CardHeader>
-        <CardTitle className="text-3xl">Results: {score} / 10</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
-          {wallResults.map((result, index) => (
-            <div
-              className={`rounded-md p-2 text-center text-sm font-semibold ${
-                result === "pass" ? "bg-green-500 text-white" : "bg-red-500 text-white"
-              }`}
-              key={`result-${index + 1}`}
-            >
-              Wall {index + 1}: {result.toUpperCase()}
-            </div>
-          ))}
-        </div>
-
-        <p className="text-sm text-muted-foreground">
-          Final Score: {score} out of {totalWalls}
-        </p>
-
-        <div className="flex gap-3">
-          <Button onClick={onRetry}>Retry</Button>
-          <Button onClick={onMainMenu} variant="outline">
-            Main Menu
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  </main>
+  <div
+    style={{
+      alignItems: "center",
+      backgroundColor: "rgba(0,0,0,0.9)",
+      color: "white",
+      display: "flex",
+      flexDirection: "column",
+      fontFamily: "Arial, sans-serif",
+      gap: "1rem",
+      inset: 0,
+      justifyContent: "center",
+      position: "fixed",
+    }}
+  >
+    <h1 style={{ fontSize: "clamp(1.5rem, 4vw, 2.5rem)", margin: 0 }}>Mission Complete</h1>
+    <p style={{ fontSize: "1.5rem", margin: 0 }}>
+      Score: {score} / {totalWalls}
+    </p>
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "0.5rem",
+        justifyContent: "center",
+        maxWidth: "600px",
+      }}
+    >
+      {wallResults.map((result, index) => (
+        <span
+          key={`result-${index + 1}`}
+          style={{
+            background: result === "pass" ? "#22c55e" : "#ef4444",
+            borderRadius: "4px",
+            fontSize: "0.85rem",
+            fontWeight: "bold",
+            padding: "0.25rem 0.75rem",
+          }}
+        >
+          Target {index + 1}
+        </span>
+      ))}
+    </div>
+    <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+      <button
+        onClick={onRetry}
+        style={{
+          background: "#22c55e",
+          border: "none",
+          borderRadius: "4px",
+          color: "white",
+          cursor: "pointer",
+          fontSize: "1rem",
+          padding: "0.75rem 2rem",
+        }}
+      >
+        Retry
+      </button>
+      <button
+        onClick={onMainMenu}
+        style={{
+          background: "transparent",
+          border: "1px solid rgba(255,255,255,0.4)",
+          borderRadius: "4px",
+          color: "white",
+          cursor: "pointer",
+          fontSize: "1rem",
+          padding: "0.75rem 2rem",
+        }}
+      >
+        Main Menu
+      </button>
+    </div>
+  </div>
 );

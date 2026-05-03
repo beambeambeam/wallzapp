@@ -1,72 +1,104 @@
 import type { JSX } from "react";
 
-import { useGameStore } from "@/store/game-store";
-import type { ArmState, WallResult } from "@/types/game";
+import type { WallResult } from "@/types/game";
 
 interface HudProps {
   currentWall: number;
   totalWalls: number;
-  leftArm: ArmState;
-  rightArm: ArmState;
-  progress: number;
   score: number;
   flash: WallResult | null;
+  // Retained for call-site compatibility; not rendered in FPS mode
+  leftArm?: unknown;
+  rightArm?: unknown;
+  progress?: number;
 }
 
-const armLabel = (state: ArmState): string => (state === "out" ? "OUT" : "TUCKED");
-
-export const HUD = ({
-  currentWall,
-  totalWalls,
-  leftArm,
-  rightArm,
-  score,
-  flash,
-}: HudProps): JSX.Element => {
-  const setLeftArm = useGameStore((state) => state.setLeftArm);
-  const setRightArm = useGameStore((state) => state.setRightArm);
-  const screen = useGameStore((state) => state.screen);
-  const isPlaying = screen === "playing";
-
-  return (
-    <div className="pointer-events-none absolute inset-0">
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 rounded-full border border-cyan-200/30 bg-slate-950/68 px-4 py-2 text-sm text-cyan-50 shadow-[0_0_24px_rgba(34,211,238,0.18)] backdrop-blur-sm">
-        Wall {currentWall} / {totalWalls}
-      </div>
-
-      <div className="absolute top-4 right-4 rounded-full border border-amber-200/30 bg-slate-950/68 px-4 py-2 text-sm text-amber-50 shadow-[0_0_20px_rgba(251,191,36,0.16)] backdrop-blur-sm">
-        Score: {score}
-      </div>
-
-      <button
-        className="pointer-events-auto absolute right-4 bottom-6 select-none rounded-full border border-cyan-200/20 bg-slate-950/72 px-6 py-4 text-xs text-white backdrop-blur-sm active:bg-cyan-500/30"
-        disabled={!isPlaying}
-        onPointerDown={() => setRightArm("tucked")}
-        onPointerUp={() => setRightArm("out")}
-        onPointerLeave={() => setRightArm("out")}
-      >
-        [D] Right: {armLabel(rightArm)}
-      </button>
-
-      <button
-        className="pointer-events-auto absolute bottom-6 left-4 select-none rounded-full border border-cyan-200/20 bg-slate-950/72 px-6 py-4 text-xs text-white backdrop-blur-sm active:bg-cyan-500/30"
-        disabled={!isPlaying}
-        onPointerDown={() => setLeftArm("tucked")}
-        onPointerUp={() => setLeftArm("out")}
-        onPointerLeave={() => setLeftArm("out")}
-      >
-        [A] Left: {armLabel(leftArm)}
-      </button>
-
-      {flash ? (
-        <div
-          className={`absolute inset-0 grid place-items-center text-5xl font-bold text-white ${
-            flash === "pass" ? "bg-emerald-400/28" : "bg-rose-500/32"
-          }`}
-        >
-          {flash === "pass" ? "PASS!" : "FAIL!"}
-        </div>
-      ) : null}
+export const HUD = ({ currentWall, totalWalls, score, flash }: HudProps): JSX.Element => (
+  <div style={{ inset: 0, pointerEvents: "none", position: "absolute" }}>
+    {/* Targets remaining */}
+    <div
+      style={{
+        background: "rgba(0,0,0,0.6)",
+        borderRadius: "20px",
+        color: "#67e8f9",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "0.85rem",
+        left: 16,
+        padding: "6px 16px",
+        position: "absolute",
+        top: 16,
+      }}
+    >
+      Targets: {totalWalls - currentWall + 1} / {totalWalls}
     </div>
-  );
-};
+
+    {/* Score */}
+    <div
+      style={{
+        background: "rgba(0,0,0,0.6)",
+        borderRadius: "20px",
+        color: "#fde68a",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "0.85rem",
+        padding: "6px 16px",
+        position: "absolute",
+        right: 16,
+        top: 16,
+      }}
+    >
+      Score: {score}
+    </div>
+
+    {/* Crosshair */}
+    <div
+      style={{
+        alignItems: "center",
+        display: "flex",
+        height: 20,
+        justifyContent: "center",
+        left: "50%",
+        position: "absolute",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+        width: 20,
+      }}
+    >
+      <div
+        style={{
+          background: "rgba(255,255,255,0.8)",
+          height: 20,
+          position: "absolute",
+          width: 2,
+        }}
+      />
+      <div
+        style={{
+          background: "rgba(255,255,255,0.8)",
+          height: 2,
+          position: "absolute",
+          width: 20,
+        }}
+      />
+    </div>
+
+    {/* Hit/miss flash overlay */}
+    {flash ? (
+      <div
+        style={{
+          alignItems: "center",
+          background: flash === "pass" ? "rgba(34,197,94,0.25)" : "rgba(239,68,68,0.3)",
+          color: "white",
+          display: "flex",
+          fontFamily: "Arial, sans-serif",
+          fontSize: "3rem",
+          fontWeight: "bold",
+          inset: 0,
+          justifyContent: "center",
+          position: "absolute",
+        }}
+      >
+        {flash === "pass" ? "HIT!" : "MISS!"}
+      </div>
+    ) : null}
+  </div>
+);

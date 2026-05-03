@@ -1,46 +1,42 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-import { useGameStore } from "@/store/game-store";
+export interface MovementState {
+  forward: boolean;
+  backward: boolean;
+  left: boolean;
+  right: boolean;
+}
 
-export const useKeyControls = (): void => {
-  const screen = useGameStore((state) => state.screen);
-  const setLeftArm = useGameStore((state) => state.setLeftArm);
-  const setRightArm = useGameStore((state) => state.setRightArm);
+export const useKeyControls = (): React.RefObject<MovementState> => {
+  const movement = useRef<MovementState>({
+    backward: false,
+    forward: false,
+    left: false,
+    right: false,
+  });
 
   useEffect(() => {
-    if (screen !== "playing") {
-      return;
-    }
-
-    const onKeyDown = (event: KeyboardEvent): void => {
-      const key = event.key.toLowerCase();
-
-      if (key === "a") {
-        setLeftArm("tucked");
-      }
-
-      if (key === "d") {
-        setRightArm("tucked");
-      }
+    const onKeyDown = (e: KeyboardEvent): void => {
+      const k = e.code;
+      if (k === "KeyW" || k === "ArrowUp") {movement.current.forward = true;}
+      if (k === "KeyS" || k === "ArrowDown") {movement.current.backward = true;}
+      if (k === "KeyA" || k === "ArrowLeft") {movement.current.left = true;}
+      if (k === "KeyD" || k === "ArrowRight") {movement.current.right = true;}
     };
-
-    const onKeyUp = (event: KeyboardEvent): void => {
-      const key = event.key.toLowerCase();
-
-      if (key === "a") {
-        setLeftArm("out");
-      }
-
-      if (key === "d") {
-        setRightArm("out");
-      }
+    const onKeyUp = (e: KeyboardEvent): void => {
+      const k = e.code;
+      if (k === "KeyW" || k === "ArrowUp") {movement.current.forward = false;}
+      if (k === "KeyS" || k === "ArrowDown") {movement.current.backward = false;}
+      if (k === "KeyA" || k === "ArrowLeft") {movement.current.left = false;}
+      if (k === "KeyD" || k === "ArrowRight") {movement.current.right = false;}
     };
-
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
     return () => {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
     };
-  }, [screen, setLeftArm, setRightArm]);
+  }, []);
+
+  return movement;
 };
