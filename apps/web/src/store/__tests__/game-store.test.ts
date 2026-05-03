@@ -71,7 +71,7 @@ describe("gameStore", () => {
     expect(state.wallResults).toHaveLength(10);
   });
 
-  test("advanceWall resets both arms to out for the next wall", () => {
+  test("advanceWall preserves held arm state for the next wall", () => {
     useGameStore.getState().startRound();
     useGameStore.getState().setLeftArm("tucked");
     useGameStore.getState().setRightArm("tucked");
@@ -81,8 +81,8 @@ describe("gameStore", () => {
     const state = useGameStore.getState();
 
     expect(state.currentWallIndex).toBe(1);
-    expect(state.leftArm).toBe("out");
-    expect(state.rightArm).toBe("out");
+    expect(state.leftArm).toBe("tucked");
+    expect(state.rightArm).toBe("tucked");
   });
 
   test("retryRound resets both arms to out", () => {
