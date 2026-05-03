@@ -4,6 +4,7 @@ import type { JSX } from "react";
 
 import { DIFFICULTY_CONFIG } from "@/constants/difficulty";
 import { judgeWall } from "@/lib/judgment";
+import { soundService } from "@/lib/sound";
 import { useGameStore } from "@/store/game-store";
 
 import { Character } from "./character";
@@ -60,6 +61,7 @@ const World = ({ onWallResolved, setWallZ, wallZ }: WorldProps): JSX.Element => 
         timingOffsetMs: offsetMs,
       });
 
+      soundService.playSound(isPass ? "pass" : "hit");
       resolveCurrentWall(isPass ? "pass" : "fail");
       setDidJudge(true);
       onWallResolved();
